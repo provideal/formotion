@@ -176,6 +176,37 @@ Your form values and state are automatically persisted across application loads,
 To reset the form, `persist` it and call `reset`, which restores it to the original state.
 
 View the [Persistence Example](./formotion/tree/master/examples/Persistence) to see it in action.
+
+### Constraints
+
+Constraints allow you to add logic to your forms. Out of the box, Formotion includes constraints for visibility, <TO BE CONTINUED>. For example:
+
+```ruby
+@form = Formotion::Form.new({
+  sections: [{
+    rows: [{
+      title: "Select 'Show'",
+      key: :the_picker,
+      type: :picker,
+      items: ["Hide", "Show"],
+      value: "Hide"
+    }, {
+      title: "I'm visible now!",
+      type: :static,
+      # CONSTRAINT
+      constraints: [{
+        type: :visibility,
+        on_key: :the_picker,
+        when_value: "Show"
+      }]
+    }
+  }, ... ]
+})
+```
+
+View the [Constraints example](./formotion/tree/constraints/examples/Constraints) to see it in action.
+
+You can write your own constraints as subclasses of `Formotion::RowConstraint::Base`. For more info, see <TO BE CONTINUED>.
      
 ## Forking
 
