@@ -70,7 +70,9 @@ module Formotion
       # When a row is deleted, actually remove the row from UI
       # instead of just nil'ing the value.
       # DEFAULT is false EXCEPT for template-generated rows
-      :remove_on_delete
+      :remove_on_delete,
+      # RowConstraint objects
+      :constraints
     ]
     PROPERTIES.each {|prop|
       attr_accessor prop
@@ -108,7 +110,10 @@ module Formotion
     attr_accessor :on_tap_callback
 
     # RowType object
-    attr_accessor :object
+    attr_reader :object
+
+    # RowConstraint objects
+    attr_reader :constraint_objects
 
     # Owning template row, if applicable
     attr_accessor :template_parent
@@ -122,11 +127,19 @@ module Formotion
     end
 
     # called after section and index have been assigned
-    def after_create
+    # but before the section has been added to the form.
+    def after_section_create
       if self.type == :template and (self.value && self.value.any?)
         self.value.each do |value|
           new_row = self.object.build_new_row({:value => value})
         end
+      end
+    end
+
+    # called after #section and #form are available
+    def after_form_create
+      self.constraint_objects.each do |c|
+        c.create_observers
       end
     end
 
@@ -172,6 +185,26 @@ module Formotion
       self.type == :subform
     end
 
+
+    #########################
+    #  Runtime attributes for RowConstraints
+
+    def enabled?
+      true
+    end
+
+    def visible?
+      constrained_result = true
+      if self.constraint_objects.count > 0
+        constrained_result = self.constraint_objects.select { |c|
+          c.applied_to? :visible?
+        }.map { |c|
+          c.apply
+        }.any?
+      end
+      constrained_result && true
+    end
+
     #########################
     #  getter overrides
     def items
@@ -186,6 +219,24 @@ module Formotion
     def type=(type)
       @object = Formotion::RowType.for(type).new(self)
       @type = type
+    end
+
+    def constraints=(constraints)
+      @constraints = constraints
+      @constraint_objects = constraints && constraints.collect do |constraint|
+        co = Formotion::RowConstraint.for(constraint[:type]).new(constraint)
+        co.row = self
+        co
+      end
+      @constraints
+    end
+
+    def constraint_objects
+      @constraint_objects ||= []
+    end
+
+    def constraints
+      @constraints ||= []
     end
 
     def range=(range)

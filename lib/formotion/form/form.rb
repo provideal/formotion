@@ -34,6 +34,10 @@ module Formotion
       sections && sections.each_with_index {|section_hash, index|
         section = create_section(section_hash.merge({index: index}))
       }
+
+      if params.count > 0
+        after_create
+      end
     end
 
     # Use this as a DSL for building forms
@@ -46,6 +50,7 @@ module Formotion
       def build(&block)
         form = new
         block.call(form)
+        form.after_create
         form
       end
     end
@@ -72,11 +77,26 @@ module Formotion
       section
     end
 
+    def after_create
+      if !@after_create
+        self.sections.each do |section|
+          section.after_form_create
+        end
+        @after_create = true
+      end
+    end
+
     #########################
     #  attributes
 
     def sections
       @sections ||= []
+    end
+
+    def visible_sections
+      sections.select { |section|
+        section.visible_rows.count > 0
+      }
     end
 
     def sections=(sections)
@@ -91,6 +111,21 @@ module Formotion
     # row = @form.row_for_index_path(NSIndexPath.indexPathForRow(0, inSection: 0))
     def row_for_index_path(index_path)
       self.sections[index_path.section].rows[index_path.row]
+    end
+
+    def visible_row_for_index_path(index_path)
+      self.visible_sections[index_path.section].visible_rows[index_path.row]
+    end
+
+    def row_for_key(key)
+      last_row = nil
+      each_row do |row|
+        if row.key == key
+          last_row = row
+          break
+        end
+      end
+      last_row
     end
 
     #########################

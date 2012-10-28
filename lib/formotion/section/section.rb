@@ -52,9 +52,16 @@ module Formotion
       row.section = self
       row.index = self.rows.count
       # dont move to after the appending.
-      row.after_create
+      row.after_section_create
       self.rows << row
       row
+    end
+
+    # after section has been added to form
+    def after_form_create
+      self.rows.each do |row|
+        row.after_form_create
+      end
     end
 
     #########################
@@ -62,6 +69,12 @@ module Formotion
 
     def rows
       @rows ||= []
+    end
+
+    def visible_rows
+      rows.select { |row|
+        row.visible?
+      }
     end
 
     def rows=(rows)

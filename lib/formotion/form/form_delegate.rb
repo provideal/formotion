@@ -32,7 +32,7 @@ module Formotion
     def reload_data
       previous_row, next_row = nil
 
-      last_row = self.sections[-1] && self.sections[-1].rows[-1]
+      last_row = self.visible_sections[-1] && self.visible_sections[-1].visible_rows[-1]
       if last_row
         last_row.return_key ||= UIReturnKeyDone
       end
@@ -42,23 +42,23 @@ module Formotion
 
     # UITableViewDataSource Methods
     def numberOfSectionsInTableView(tableView)
-      self.sections.count
+      self.visible_sections.count
     end
 
     def tableView(tableView, numberOfRowsInSection: section)
-      self.sections[section].rows.count
+      self.visible_sections[section].visible_rows.count
     end
 
     def tableView(tableView, titleForHeaderInSection:section)
-      section = self.sections[section].title
+      section = self.visible_sections[section].title
     end
 
     def tableView(tableView, titleForFooterInSection:section)
-      self.sections[section].footer
+      self.visible_sections[section].footer
     end
 
     def tableView(tableView, cellForRowAtIndexPath:indexPath)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       reuseIdentifier = row.reuse_identifier
 
       cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier) || begin
@@ -71,12 +71,12 @@ module Formotion
     end
 
     def tableView(tableView, heightForRowAtIndexPath: indexPath)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       row.row_height || tableView.rowHeight
     end
 
     def tableView(tableView, commitEditingStyle: editingStyle, forRowAtIndexPath: indexPath)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       case editingStyle
       when UITableViewCellEditingStyleInsert
         row.object.on_insert(tableView, self)
@@ -89,18 +89,18 @@ module Formotion
     # UITableViewDelegate Methods
     def tableView(tableView, didSelectRowAtIndexPath:indexPath)
       tableView.deselectRowAtIndexPath(indexPath, animated:true)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       row.object.on_select(tableView, self)
     end
 
     def tableView(tableView, editingStyleForRowAtIndexPath:indexPath)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       row.object.cellEditingStyle
     end
 
 
     def tableView(tableView, shouldIndentWhileEditingRowAtIndexPath: indexPath)
-      row = row_for_index_path(indexPath)
+      row = visible_row_for_index_path(indexPath)
       row.object.indentWhileEditing?
     end
   end
