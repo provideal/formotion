@@ -201,7 +201,7 @@ You can style your form with custom colors. For each row, you can set properties
 }
 ```
 
-View the [Styling Example](./formotion/tree/styling/examples/Styling) to see it in action.
+View the [Styling example](./styling/examples/Styling) to see it in action.
 
      
 ## Forking
