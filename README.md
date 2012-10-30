@@ -176,6 +176,31 @@ Your form values and state are automatically persisted across application loads,
 To reset the form, `persist` it and call `reset`, which restores it to the original state.
 
 View the [Persistence Example](./formotion/tree/master/examples/Persistence) to see it in action.
+
+### Styling
+
+You can style your form with custom colors. For each row, you can set properties under the `style` key, like so:
+
+```ruby
+{
+  title: "Pretty",
+  type: :string,
+  style: {
+    font_color: "333333"
+    background_color: {
+      top: "white",
+      bottom: "dddddd"
+    },
+    selection_color: {
+      top: "eeeeee",
+      bottom: "dddddd"
+    }
+  }
+}
+```
+
+View the [Styling Example](./formotion/tree/master/examples/Persistence) to see it in action.
+
      
 ## Forking
 
