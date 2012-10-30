@@ -6,7 +6,7 @@ module Formotion
       FIELD_BUFFER = Device.iphone? ? 20 : 64
 
       def tableView
-        @tableView ||= self.row.form.table
+        self.row.form.table
       end
 
       def initialize(row)

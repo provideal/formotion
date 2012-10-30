@@ -70,7 +70,9 @@ module Formotion
       # When a row is deleted, actually remove the row from UI
       # instead of just nil'ing the value.
       # DEFAULT is false EXCEPT for template-generated rows
-      :remove_on_delete
+      :remove_on_delete,
+      # The hash corresponding to a collcction of RowStyles
+      :style
     ]
     PROPERTIES.each {|prop|
       attr_accessor prop
@@ -110,6 +112,9 @@ module Formotion
     # RowType object
     attr_accessor :object
 
+    # RowStyle objects
+    attr_reader :style_objects
+
     # Owning template row, if applicable
     attr_accessor :template_parent
 
@@ -135,6 +140,20 @@ module Formotion
 
     def index_path
       NSIndexPath.indexPathForRow(self.index, inSection:self.section.index)
+    end
+
+    def position_type
+      [:top, :bottom, :middle, :single]
+
+      if self.section.rows.count == 1
+        :single
+      elsif self.index == 0
+        :top
+      elsif self.index == self.section.rows.count - 1
+        :bottom
+      else
+        :middle
+      end
     end
 
     def form
@@ -186,6 +205,21 @@ module Formotion
     def type=(type)
       @object = Formotion::RowType.for(type).new(self)
       @type = type
+    end
+
+    def style_objects
+      @style_objects ||= []
+    end
+
+    def style=(style_hash)
+      @style = style_hash
+      @style_objects = []
+      @style.each do |style_type, style|
+        style_object = Formotion::RowStyle.for(style_type).new(style)
+        style_object.row = self
+        @style_objects << style_object
+      end
+      @style
     end
 
     def range=(range)
@@ -245,6 +279,7 @@ module Formotion
       cell, text_field = Formotion::RowCellBuilder.make_cell(self)
       @text_field = text_field
       self.object.after_build(cell)
+      cell = self.style_cell(cell)
       cell
     end
 
@@ -252,6 +287,22 @@ module Formotion
     # so keep implementation details minimal
     def update_cell(cell)
       self.object.update_cell(cell)
+      cell
+    end
+
+    # Called on every tableView:cellForRowAtIndexPath:
+    # so keep implementation details minimal
+    def style_cell(cell)
+      self.style_objects.each do |style_object|
+        style_object.setup_cell(cell)
+      end
+      cell
+    end
+
+    def will_display(cell)
+      self.style_objects.each do |style_object|
+        style_object.will_display(cell)
+      end
       cell
     end
 
@@ -283,30 +334,6 @@ module Formotion
         end
       end
       @subform
-    end
-
-    private
-    def const_int_get(base, value)
-      return value if value.is_a? Integer
-      value = value.to_s.camelize
-      Kernel.const_get("#{base}#{value}")
-    end
-
-    # Looks like RubyMotion adds UIKit constants
-    # at compile time. If you don't use these
-    # directly in your code, they don't get added
-    # to Kernel and const_int_get crashes.
-    def load_constants_hack
-      [UITextAutocapitalizationTypeNone, UITextAutocapitalizationTypeWords,
-        UITextAutocapitalizationTypeSentences,UITextAutocapitalizationTypeAllCharacters,
-        UITextAutocorrectionTypeNo, UITextAutocorrectionTypeYes, UITextAutocorrectionTypeDefault,
-        UIReturnKeyDefault, UIReturnKeyGo, UIReturnKeyGoogle, UIReturnKeyJoin,
-        UIReturnKeyNext, UIReturnKeyRoute, UIReturnKeySearch, UIReturnKeySend,
-        UIReturnKeyYahoo, UIReturnKeyDone, UIReturnKeyEmergencyCall,
-        UITextFieldViewModeNever, UITextFieldViewModeAlways, UITextFieldViewModeWhileEditing,
-        UITextFieldViewModeUnlessEditing, NSDateFormatterShortStyle, NSDateFormatterMediumStyle,
-        NSDateFormatterLongStyle, NSDateFormatterFullStyle
-      ]
     end
   end
 end

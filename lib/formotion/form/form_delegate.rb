@@ -87,6 +87,11 @@ module Formotion
 
 
     # UITableViewDelegate Methods
+    def tableView(tableView, willDisplayCell: cell, forRowAtIndexPath: indexPath)
+      row = row_for_index_path(indexPath)
+      row.will_display(cell)
+    end
+
     def tableView(tableView, didSelectRowAtIndexPath:indexPath)
       tableView.deselectRowAtIndexPath(indexPath, animated:true)
       row = row_for_index_path(indexPath)

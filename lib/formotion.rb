@@ -8,6 +8,12 @@ BW.require File.expand_path('../formotion/**/*.rb', __FILE__) do
   # hack to make sure base row type is compiled early
   file('lib/formotion/base.rb').depends_on base_row_type
 
+  file('lib/formotion/style/base.rb').depends_on 'lib/formotion/base.rb'
+
+  ['background_color_style', 'selection_color_style', 'font_color_style'].each { |file|
+    file("lib/formotion/style/#{file}.rb").depends_on 'lib/formotion/style/base.rb'
+  }
+
   row_types = Dir.glob('lib/formotion/row_type/**/*.rb')
   row_types.each {|file|
     next if file == base_row_type
