@@ -76,6 +76,16 @@ module Formotion
     ]
     PROPERTIES.each {|prop|
       attr_accessor prop
+
+=begin
+      define_method "visible_#{prop}" do
+        self.constraint_objects.select { |c|
+          c.applied_to? :properties
+        }.map { |c|
+          c.apply(prop)
+        } && true
+      end
+=end
     }
     BOOLEAN_PROPERTIES = [:secure, :indented, :deletable, :remove_on_delete]
     BOOLEAN_PROPERTIES.each { |prop|
