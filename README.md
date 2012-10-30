@@ -179,6 +179,8 @@ View the [Persistence Example](./formotion/tree/master/examples/Persistence) to 
 
 ### Styling
 
+![Styling forms](http://i.imgur.com/mSxru.png)
+
 You can style your form with custom colors. For each row, you can set properties under the `style` key, like so:
 
 ```ruby
