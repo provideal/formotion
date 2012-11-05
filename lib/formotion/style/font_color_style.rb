@@ -1,7 +1,7 @@
 module Formotion
   module RowStyle
     class FontColorStyle < Base
-      PROPERTIES = [:color].each { |prop|
+      PROPERTIES = [:color, :title, :subtitle, :value].each { |prop|
         attr_accessor prop
       }
 
@@ -10,10 +10,24 @@ module Formotion
       end
 
       def setup_cell(cell)
-        cell.subviews_recursive_each do |subview|
-          if subview.respond_to? "setTextColor:"
-            subview.setTextColor(self.color.to_color)
+        if self.color
+          cell.subviews_recursive_each do |subview|
+            if subview.respond_to? "setTextColor:"
+              subview.setTextColor(self.color.to_color)
+            end
           end
+        end
+
+        if self.title
+          cell.textLabel.setTextColor(self.title.to_color)
+        end
+
+        if self.subtitle
+          cell.detailTextLabel.setTextColor(self.subtitle.to_color)
+        end
+
+        if self.value
+          self.row.text_field.setTextColor(self.value.to_color)
         end
       end
     end

@@ -44,21 +44,45 @@ class AppDelegate
       }, {
         title: "Font Color",
         rows: [{
-          title: "White on Red",
+          title: "All Red",
           type: :string,
+          value: "Red Everything",
           style: {
-            background_color: "red",
-            font_color: "white"
+            font_color: "red"
+          }
+        }, {
+          title: "Red Title",
+          type: :text,
+          value: "Purple value",
+          style: {
+            font_color: {
+              title: "red",
+              value: "purple"
+            }
+          }
+        }, {
+          title: "Success!",
+          type: :string,
+          subtitle: "It worked",
+          value: "This is normal",
+          style: {
+            font_color: {
+              title: "09A41D",
+              subtitle: "09A41D"
+            }
           }
         }, {
           title: "Blue on Gradient",
           type: :string,
+          value: "I'm blue",
           style: {
             background_color: {
               top: "ffffff",
               bottom: "dddddd"
             },
-            font_color: "0088cc"
+            font_color: {
+              value: "0088cc"
+            }
           }
         }]
       }, {
@@ -82,15 +106,18 @@ class AppDelegate
           }
         }, {
           title: "Green to Purple",
+          subtitle: "Tap me",
           type: :string,
           style: {
             selection_color: {
               top: "green",
-              bottom: "purple"
+              bottom: "purple",
+              font_color: "red"
             }
           }
         }, {
           title: "Square",
+          subtitle: "A subtle touch",
           type: :string,
           style: {
             background_color: {
@@ -99,7 +126,8 @@ class AppDelegate
             },
             selection_color: {
               top: "eeeeee",
-              bottom: "dddddd"
+              bottom: "dddddd",
+              font_color: "none"
             }
           }
         }]

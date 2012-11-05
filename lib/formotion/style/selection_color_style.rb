@@ -1,7 +1,7 @@
 module Formotion
   module RowStyle
     class SelectionColorStyle < Base
-      PROPERTIES = [:color, :top, :bottom].each { |prop|
+      PROPERTIES = [:color, :top, :bottom, :font_color].each { |prop|
         attr_accessor prop
       }
 
@@ -27,6 +27,15 @@ module Formotion
           end
 
           cell.selectedBackgroundView.colors = [top_color, bottom_color]
+        end
+
+        if self.font_color
+          cell.subviews_recursive_each do |subview|
+            if subview.respond_to?("setHighlightedTextColor:")
+              using_color = (self.font_color == "none") ? subview.textColor : self.font_color.to_color
+              subview.setHighlightedTextColor(using_color)
+            end
+          end
         end
       end
 
