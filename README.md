@@ -204,7 +204,7 @@ Constraints allow you to add logic to your forms. Out of the box, Formotion incl
 })
 ```
 
-View the [Constraints example](./formotion/tree/constraints/examples/Constraints) to see it in action.
+View the [Constraints example](./constraints/examples/Constraints) to see it in action.
 
 You can write your own constraints as subclasses of `Formotion::RowConstraint::Base`. For more info, see <TO BE CONTINUED>.
      
