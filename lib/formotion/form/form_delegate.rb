@@ -49,8 +49,23 @@ module Formotion
       self.sections[section].rows.count
     end
 
-    def tableView(tableView, titleForHeaderInSection:section)
-      section = self.sections[section].title
+    # def tableView(tableView, titleForHeaderInSection:section)
+    #   section = self.sections[section].title
+    # end
+
+    def tableView(tableView, heightForHeaderInSection:section)
+      35
+    end
+    
+    def tableView(tableView, viewForHeaderInSection:section)
+      view                  = UIView.alloc.initWithFrame([[0, 0], [Device.screen.width, 35]])
+      label                 = UILabel.alloc.initWithFrame([[10, 0], [Device.screen.width - 10, 35]])
+      label.font            = UIFont.fontWithName('Exo-BoldItalic', size: 15)
+      label.text            = self.sections[section].title
+      label.textColor       = '#444444'.to_color
+      label.backgroundColor = UIColor.clearColor
+      view.addSubview(label)
+      view
     end
 
     def tableView(tableView, titleForFooterInSection:section)

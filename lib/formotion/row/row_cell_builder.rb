@@ -20,6 +20,12 @@ module Formotion
       cell.detailTextLabel.text = row.subtitle
 
       edit_field = row.object.build_cell(cell)
+      
+      if edit_field
+        edit_field.textInputTraits.setValue('#94c11f'.to_color, forKey:'insertionPointColor') 
+        edit_field.font = UIFont.fontWithName('Exo', size: 14)
+        edit_field.textColor = '#444444'.to_color
+      end
 
       [cell, edit_field]
     end
