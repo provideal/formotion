@@ -54,12 +54,12 @@ module Formotion
     # end
 
     def tableView(tableView, heightForHeaderInSection:section)
-      35
+      45
     end
     
     def tableView(tableView, viewForHeaderInSection:section)
-      view                  = UIView.alloc.initWithFrame([[0, 0], [Device.screen.width, 35]])
-      label                 = UILabel.alloc.initWithFrame([[10, 0], [Device.screen.width - 10, 35]])
+      view                  = UIView.alloc.initWithFrame([[0, 0], [Device.screen.width, 45]])
+      label                 = UILabel.alloc.initWithFrame([[10, 0], [Device.screen.width - 10, 45]])
       label.font            = UIFont.fontWithName('Exo-BoldItalic', size: 15)
       label.text            = self.sections[section].title
       label.textColor       = '#444444'.to_color

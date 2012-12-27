@@ -18,6 +18,10 @@ module Formotion
             }
 
             self.textLabel.center = CGPointMake(self.frame.size.width / 2 - (Formotion::RowType::Base.field_buffer / 2), self.textLabel.center.y)
+            self.textLabel.font = UIFont.fontWithName('Exo-Bold', size:15)
+            self.textLabel.textColor = '#eeeeee'.to_color
+            self.contentView.backgroundColor = '#94c11f'.to_color.colorWithAlphaComponent(0.7)
+            # self.contentView.backgroundColor = '#444444'.to_color
             self.detailTextLabel.center = CGPointMake(self.frame.size.width / 2 - (Formotion::RowType::Base.field_buffer / 2), self.detailTextLabel.center.y)
           end
         end

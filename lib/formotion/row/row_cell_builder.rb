@@ -22,8 +22,11 @@ module Formotion
       edit_field = row.object.build_cell(cell)
       
       if edit_field
-        edit_field.textInputTraits.setValue('#94c11f'.to_color, forKey:'insertionPointColor') 
-        edit_field.font = UIFont.fontWithName('Exo', size: 14)
+        edit_field.textInputTraits.setValue('#94c11f'.to_color.colorWithAlphaComponent(0.7), forKey:'insertionPointColor')
+        edit_field.textInputTraits.setValue('#94c11f'.to_color.colorWithAlphaComponent(0.2), forKey:'selectionHighlightColor') 
+        edit_field.textInputTraits.setValue('#94c11f'.to_color, forKey:'selectionBarColor') 
+        edit_field.textInputTraits.setValue(UIImage.imageNamed('selection_text.png'), forKey:'selectionDragDotImage') 
+        edit_field.font = UIFont.fontWithName('Exo', size: 15)
         edit_field.textColor = '#444444'.to_color
       end
 
